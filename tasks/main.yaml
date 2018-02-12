@@ -1,0 +1,24 @@
+---
+- include_tasks: get-hostname-ec2-tag.yaml
+  when: hostname_from_ec2_Name_tag == true
+
+- name: Use obtained _ec2_name_tag as the value of _hostname_to_use
+  set_fact:
+    _hostname_to_use: "{{ _ec2_name_tag }}"
+  when: _ec2_name_tag is defined
+
+- name: Use server_hostname as the value of _hostname_to_use
+  set_fact:
+    _hostname_to_use: "{{ server_hostname }}"
+  when: _ec2_name_tag is not defined
+
+- name: Set hostname to {{ _hostname_to_use }}
+  hostname:
+    name: "{{ _hostname_to_use }}"
+
+- name: Hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127\.0\.0\.1[ \t]+localhost'
+    line: '127.0.0.1 localhost {{ _hostname_to_use }}'
+    state: present
