@@ -4,12 +4,12 @@
 
 - name: Use obtained _ec2_name_tag as the value of _hostname_to_use
   set_fact:
-    _hostname_to_use: "{{ _ec2_name_tag }}"
+    _hostname_to_use: "{{ _ec2_name_tag | replace('.', '-') }}"
   when: _ec2_name_tag is defined
 
 - name: Use server_hostname as the value of _hostname_to_use
   set_fact:
-    _hostname_to_use: "{{ server_hostname }}"
+    _hostname_to_use: "{{ server_hostname | replace('.', '-') }}"
   when: _ec2_name_tag is not defined
 
 - name: Set hostname to {{ _hostname_to_use }}
