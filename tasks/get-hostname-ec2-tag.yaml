@@ -1,17 +1,25 @@
 ---
-- name: Register the instance's IP address
+- name: update the value of server_hostname
   set_fact:
-    _filter_ip_address: "{{ ansible_ssh_host }}"
+    _ec2_name_tag: "{{ ec2_tag_Name }}"
+  when: ec2_tag_Name is defined
 
-- name: Get EC2 facts using host IP address
-  become: no
-  local_action:
-    module: ec2_instance_facts
-    filters:
-      ip-address: "{{ _filter_ip_address }}"
-  register: discovered_hosts
+- block:
+  - name: Register the instance's IP address
+    set_fact:
+      _filterq_ip_address: "{{ ansible_ssh_host }}"
 
-- name: Update the value of server_hostname
-  set_fact:
-    _ec2_name_tag: "{{ discovered_hosts.instances[0].tags.Name }}"
-  when: discovered_hosts.instances is defined and discovered_hosts.instances.0 is defined
+  - name: Get EC2 facts using host IP address
+    become: no
+    local_action:
+      module: ec2_instance_facts
+      filters:
+        ip-address: "{{ _filter_ip_address }}"
+    register: discovered_hosts
+
+  - name: Update the value of server_hostname
+    set_fact:
+      _ec2_name_tag: "{{ discovered_hosts.instances[0].tags.Name }}"
+    when: discovered_hosts.instances is defined and discovered_hosts.instances.0 is defined
+  when: ec2_tag_Name is not defined
+
