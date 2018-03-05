@@ -1,5 +1,5 @@
 ---
-- include_tasks: get-hostname-ec2-tag.yaml
+- include_tasks: get-hostname-ec2-tag.yml
   when: hostname_from_ec2_Name_tag == true
 
 - name: Use obtained _ec2_name_tag as the value of _hostname_to_use
