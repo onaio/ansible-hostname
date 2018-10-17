@@ -12,13 +12,14 @@
     _hostname_to_use: "{{ server_hostname | replace('.', '-') }}"
   when: _ec2_name_tag is not defined
 
-- name: Set hostname to {{ _hostname_to_use }}
-  hostname:
-    name: "{{ _hostname_to_use }}"
-
 - name: Hosts
   lineinfile:
     dest: /etc/hosts
     regexp: '^127\.0\.0\.1[ \t]+localhost'
     line: '127.0.0.1 localhost {{ _hostname_to_use }}'
     state: present
+
+- name: Set hostname to {{ _hostname_to_use }}
+  hostname:
+    name: "{{ _hostname_to_use }}"
+
