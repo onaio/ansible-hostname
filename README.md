@@ -14,9 +14,12 @@ None currently.
 
     # The server's hostname. This defaults to the hostname defined in `ansible_hostname`.
     server_hostname: "{{ ansible_hostname }}"
-    
+
     # Set to `true` if you want the role to use the server's EC2 Name tag as the hostname.
     hostname_from_ec2_Name_tag: false
+
+    # Set to `false` if you would like cloudinit to replace the hostname when launching the instance
+    cloud_init_preserve_hostname: true
 
 
 Requirements

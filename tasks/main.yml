@@ -23,3 +23,9 @@
   hostname:
     name: "{{ _hostname_to_use }}"
 
+- name: Configure cloudinit option on preserving hostname
+  lineinfile:
+    dest: /etc/cloud/cloud.cfg
+    regexp: "^preserve_hostname:[ \t]+false"
+    line: "preserve_hostname: {{ cloud_init_preserve_hostname }}"
+    state: present
