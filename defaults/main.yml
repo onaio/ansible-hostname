@@ -1,4 +1,4 @@
 ---
 server_hostname: "{{ ansible_hostname }}"
 hostname_from_ec2_Name_tag: false
-cloud_init_preserve_hostname: true
+hostname_cloud_init_preserve_hostname: true

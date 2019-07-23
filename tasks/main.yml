@@ -27,5 +27,5 @@
   lineinfile:
     dest: /etc/cloud/cloud.cfg
     regexp: "^preserve_hostname:[ \t]+false"
-    line: "preserve_hostname: {{ cloud_init_preserve_hostname }}"
+    line: "preserve_hostname: {{ hostname_cloud_init_preserve_hostname }}"
     state: present

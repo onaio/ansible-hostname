@@ -19,7 +19,7 @@ None currently.
     hostname_from_ec2_Name_tag: false
 
     # Set to `false` if you would like cloudinit to replace the hostname when launching the instance
-    cloud_init_preserve_hostname: true
+    hostname_cloud_init_preserve_hostname: true
 
 
 Requirements
