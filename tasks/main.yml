@@ -23,9 +23,15 @@
   hostname:
     name: "{{ _hostname_to_use }}"
 
+- name: Check if cloud-init is installed
+  command: "{{ hostname_cloud_init_check_command }}"
+  ignore_errors: true
+  register: hostname_cloud_init_status
+
 - name: Configure cloudinit option on preserving hostname
   lineinfile:
     dest: /etc/cloud/cloud.cfg
     regexp: "^preserve_hostname:[ \t]+false"
     line: "preserve_hostname: {{ hostname_cloud_init_preserve_hostname }}"
     state: present
+  when: hostname_cloud_init_status.rc == 0

@@ -2,3 +2,7 @@
 server_hostname: "{{ ansible_hostname }}"
 hostname_from_ec2_Name_tag: false
 hostname_cloud_init_preserve_hostname: true
+# Command to run when checking if cloud-init is installed
+# A return code of 0 assumes cloud-init is installed
+# Every other return code assumes cloud-init is not installed
+hostname_cloud_init_check_command: "dpkg-query -l cloud-init"
