@@ -7,7 +7,7 @@
 - block:
   - name: Register the instance's IP address
     set_fact:
-      _filterq_ip_address: "{{ ansible_ssh_host }}"
+      _filter_ip_address: "{{ ansible_ssh_host }}"
 
   - name: Get EC2 facts using host IP address
     become: no
