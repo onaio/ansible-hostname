@@ -1,0 +1,2 @@
+---
+hostname_cloudinit_config_file: /etc/cloud/cloud.cfg
