@@ -17,9 +17,6 @@ platforms:
       LANG: "C.UTF-8"
 provisioner:
   name: ansible
-  env:
-    # Docker bind-mounts /etc/hosts, so atomic renames fail inside the test container
-    ANSIBLE_UNSAFE_WRITES: "1"
 scenario:
   name: default
 verifier:
