@@ -1,0 +1,11 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    # Docker bind-mounts these files, which blocks replacing them inside the container
+    - name: Unmount the files Docker manages
+      command: umount {{ item }}
+      loop:
+        - /etc/hosts
+        - /etc/hostname
+      changed_when: true

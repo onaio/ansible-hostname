@@ -1,10 +1,6 @@
 ---
 - name: Converge
   hosts: all
-  # Docker bind-mounts /etc/hosts, so atomic renames fail inside the test container
-  module_defaults:
-    lineinfile:
-      unsafe_writes: true
   tasks:
     - name: Set the hostname
       include_role:
