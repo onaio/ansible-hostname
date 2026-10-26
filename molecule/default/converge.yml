@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Set the hostname
+      include_role:
+        name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
+      vars:
+        server_hostname: molecule.test-host
