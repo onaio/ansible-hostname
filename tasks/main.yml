@@ -25,6 +25,7 @@
 - name: Check if cloud-init is installed
   command: "{{ hostname_cloud_init_check_command }}"
   ignore_errors: true
+  changed_when: false
   register: hostname_cloud_init_install_status
 
 - name: Check if cloud-init config dir exists
