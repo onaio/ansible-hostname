@@ -1,25 +1,25 @@
 ---
-- name: update the value of server_hostname
-  set_fact:
+- name: Update the value of server_hostname
+  ansible.builtin.set_fact:
     _ec2_name_tag: "{{ ec2_tag_Name }}"
   when: ec2_tag_Name is defined
 
-- block:
-  - name: Register the instance's IP address
-    set_fact:
-      _filter_ip_address: "{{ ansible_ssh_host }}"
-
-  - name: Get EC2 facts using host IP address
-    become: no
-    local_action:
-      module: ec2_instance_facts
-      filters:
-        ip-address: "{{ _filter_ip_address }}"
-    register: discovered_hosts
-
-  - name: Update the value of server_hostname
-    set_fact:
-      _ec2_name_tag: "{{ discovered_hosts.instances[0].tags.Name }}"
-    when: discovered_hosts.instances is defined and discovered_hosts.instances.0 is defined
+- name: Look up the EC2 Name tag by IP address
   when: ec2_tag_Name is not defined
+  block:
+    - name: Register the instance's IP address
+      ansible.builtin.set_fact:
+        _filter_ip_address: "{{ ansible_ssh_host }}"
 
+    - name: Get EC2 facts using host IP address
+      become: false
+      ec2_instance_facts:
+        filters:
+          ip-address: "{{ _filter_ip_address }}"
+      delegate_to: localhost
+      register: discovered_hosts
+
+    - name: Update the value of server_hostname
+      ansible.builtin.set_fact:
+        _ec2_name_tag: "{{ discovered_hosts.instances[0].tags.Name }}"
+      when: discovered_hosts.instances is defined and discovered_hosts.instances.0 is defined
