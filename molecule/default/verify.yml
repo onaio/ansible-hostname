@@ -1,0 +1,20 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Read the hostname
+      ansible.builtin.command: hostname
+      register: hostname_output
+      changed_when: false
+
+    - name: Read /etc/hosts
+      ansible.builtin.slurp:
+        src: /etc/hosts
+      register: hosts_file
+
+    - name: Check the hostname is set and resolvable locally
+      ansible.builtin.assert:
+        that:
+          - hostname_output.stdout == "molecule-test-host"
+          - "'127.0.0.1 molecule-test-host' in (hosts_file.content | b64decode)"

@@ -1,36 +1,43 @@
 ---
-- include_tasks: get-hostname-ec2-tag.yml
-  when: hostname_from_ec2_Name_tag == true
+- name: Get the hostname from the EC2 Name tag
+  ansible.builtin.include_tasks: get-hostname-ec2-tag.yml
+  when: hostname_from_ec2_Name_tag | bool
 
 - name: Use obtained _ec2_name_tag as the value of _hostname_to_use
-  set_fact:
+  ansible.builtin.set_fact:
     _hostname_to_use: "{{ _ec2_name_tag | replace('.', '-') }}"
   when: _ec2_name_tag is defined
 
 - name: Use server_hostname as the value of _hostname_to_use
-  set_fact:
+  ansible.builtin.set_fact:
     _hostname_to_use: "{{ server_hostname | replace('.', '-') }}"
   when: _ec2_name_tag is not defined
 
 - name: Hosts
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/hosts
-    line: '127.0.0.1 {{ _hostname_to_use }}'
+    line: "127.0.0.1 {{ _hostname_to_use }}"
     state: present
 
 - name: Set hostname to {{ _hostname_to_use }}
-  hostname:
+  ansible.builtin.hostname:
     name: "{{ _hostname_to_use }}"
 
 - name: Check if cloud-init is installed
-  command: "{{ hostname_cloud_init_check_command }}"
+  ansible.builtin.command: "{{ hostname_cloud_init_check_command }}"
   ignore_errors: true
-  register: hostname_cloud_init_status
+  changed_when: false
+  register: hostname_cloud_init_install_status
+
+- name: Check if cloud-init config dir exists
+  ansible.builtin.stat:
+    path: "{{ hostname_cloudinit_config_file }}"
+  register: hostname_cloud_init_config_status
 
 - name: Configure cloudinit option on preserving hostname
-  lineinfile:
-    dest: /etc/cloud/cloud.cfg
+  ansible.builtin.lineinfile:
+    dest: "{{ hostname_cloudinit_config_file }}"
     regexp: "^preserve_hostname:[ \t]+false"
     line: "preserve_hostname: {{ hostname_cloud_init_preserve_hostname }}"
     state: present
-  when: hostname_cloud_init_status.rc == 0
+  when: hostname_cloud_init_install_status.rc == 0 and hostname_cloud_init_config_status.stat.exists

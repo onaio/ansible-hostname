@@ -1,13 +1,15 @@
 ---
 galaxy_info:
+  role_name: hostname
+  namespace: onaio
   author: Ona Engineering
   description: Sets a server's hostname
-  min_ansible_version: 2.4
+  min_ansible_version: "2.4"
   license: Apache2
   platforms:
     - name: Ubuntu
       versions:
-        - trusty
-        - xenial
-  categories:
+        - jammy
+        - noble
+  galaxy_tags:
     - hostname
